@@ -1,0 +1,57 @@
+---
+import { BadgeGroup } from '@/components/badge'
+import BaseLayout from '@/layouts/base.astro'
+import { LiteHeader } from '@/layouts/lite-header'
+import { Badge, Box, Container, Heading } from '@radix-ui/themes'
+import { getCollection } from 'astro:content'
+
+import {
+    PostList,
+    PostListItem,
+    PostListItemDescription,
+    PostListItemLink,
+    PostListItemPublishedDate,
+    PostListItemTitle,
+} from '@/components/post-list'
+
+const posts = (await getCollection('blog')).sort(
+    (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
+)
+---
+
+<BaseLayout>
+    <Container size="3">
+        <LiteHeader />
+        <main>
+            <Box pt="6" pb="2">
+                <Heading size="8" mb="4" as="h1">Blog</Heading>
+            </Box>
+            <section>
+                <PostList>
+                    {
+                        posts.map((post) => (
+                            <PostListItem key={post.slug}>
+                                <PostListItemLink href={`/blog/${post.slug}/`}>
+                                    <PostListItemTitle>
+                                        {post.data.title}
+                                    </PostListItemTitle>
+                                    <PostListItemDescription>
+                                        {post.data.description}
+                                    </PostListItemDescription>
+                                    <BadgeGroup mt="4">
+                                        {post.data.tags?.map((tag) => (
+                                            <Badge size="1">{tag}</Badge>
+                                        ))}
+                                    </BadgeGroup>
+                                    <PostListItemPublishedDate
+                                        date={post.data.publishedDate}
+                                    />
+                                </PostListItemLink>
+                            </PostListItem>
+                        ))
+                    }
+                </PostList>
+            </section>
+        </main>
+    </Container>
+</BaseLayout>

@@ -1,0 +1,13 @@
+.email-me-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--accent-a11);
+    cursor: pointer;
+}
+
+.vertical-divider {
+    width: 2px;
+
+    background-color: var(--gray-7);
+}

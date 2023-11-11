@@ -1,0 +1,13 @@
+.md-content {
+    .ks-c-paragraph {
+        margin-top: var(--space-4);
+    }
+
+    .ks-c-h1 {
+        margin-top: var(--space-6);
+    }
+
+    .ks-c-h2 {
+        margin-top: var(--space-6);
+    }
+}

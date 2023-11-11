@@ -1,0 +1,46 @@
+---
+import { H1, H2, H3, H4, H5, H6, Paragraph } from '@/components/text'
+import BaseLayout from '@/layouts/base.astro'
+import { BlogPost } from '@/layouts/blog-post'
+import { LiteHeader } from '@/layouts/lite-header'
+import { Container, Heading, Link } from '@radix-ui/themes'
+import '@radix-ui/themes/styles.css'
+import { getCollection, type CollectionEntry } from 'astro:content'
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog')
+
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: post,
+    }))
+}
+
+type Props = CollectionEntry<'blog'>
+
+const post = Astro.props
+
+const { Content } = await post.render()
+---
+
+<BaseLayout>
+    <Container size="3">
+        <LiteHeader />
+        <main>
+            <BlogPost client:load {...post.data}>
+                <Content
+                    components={{
+                        a: Link,
+                        p: Paragraph,
+                        h1: H1,
+                        h2: H2,
+                        h3: H3,
+                        h4: H4,
+                        h5: H5,
+                        h6: H6,
+                    }}
+                />
+            </BlogPost>
+        </main>
+    </Container>
+</BaseLayout>

@@ -1,0 +1,55 @@
+---
+import { HomePage } from '@/components/pages/home'
+import BaseLayout from '@/layouts/base.astro'
+import { shuffle } from '@/utils/array'
+import { __DEV__ } from '@/utils/assertion'
+import { getImage } from 'astro:assets'
+import { getCollection } from 'astro:content'
+import fs from 'node:fs/promises'
+import { getPlaiceholder } from 'plaiceholder'
+
+const imageFiles = await Astro.glob('../assets/photos/*.jpg')
+const profilePicture = await Astro.glob('../assets/me.jpg')
+
+const getImagesWithPlaiceholder = async (files: Record<string, any>[]) =>
+    Promise.all(
+        files.map(async ({ default: file }) => {
+            const { src, attributes } = await getImage({ src: file })
+
+            const filePath = __DEV__
+                ? `../${file.src.split('/src')[1]}`
+                : `../..${file.src.split('?')[0]}`
+
+            const buffer = await fs.readFile(
+                new URL(filePath, import.meta.url),
+                null
+            )
+
+            const {
+                metadata: { height, width },
+                ...plaiceholder
+            } = await getPlaiceholder(buffer)
+
+            return {
+                ...plaiceholder,
+                img: { ...attributes, src, height, width },
+            }
+        })
+    )
+
+const images = await getImagesWithPlaiceholder(imageFiles)
+const pp = await getImagesWithPlaiceholder(profilePicture)
+
+const photos = shuffle(images).slice(0, 32)
+
+const posts = (await getCollection('blog'))
+    .sort(
+        (a, b) =>
+            b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf()
+    )
+    .slice(0, 3)
+---
+
+<BaseLayout>
+    <HomePage pp={pp[0]} photos={photos} posts={posts} client:load />
+</BaseLayout>

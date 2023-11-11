@@ -1,0 +1,20 @@
+.ks-c-post-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ks-c-post-list__item {
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--gray-7);
+}
+
+.ks-c-post-list__item__link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.ks-c-post-list__item__title:hover {
+    text-decoration: underline;
+}

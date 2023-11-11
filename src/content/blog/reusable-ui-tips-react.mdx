@@ -1,0 +1,40 @@
+---
+title: "Tips for building reusable React components that don't suck"
+description: "Whether I'm building a component for a design system's component library, or a project-specific component that will only be reused within a single application, I've found that following these tips helps me and my team build components that make us more productive."
+publishedDate: 'Sep 08 2023'
+heroImage: '/blog-placeholder-3.jpg'
+tags: ['react', 'ui', 'css', 'design systems']
+---
+
+I've spent more time than I'm willing to admit investigating the source code of popular and much-loved React UI libraries like [Chakra UI](https://github.com/chakra-ui/chakra-ui) and [Radix UI](https://github.com/radix-ui/themes), and architecting similar systems myself.
+
+I'm currently working on [SingleStore](https://singlestore.com)'s design system, Fusion, where we're focused on auditting our applications and implementing a design system that's shared across all three of the major applications - the [Product](https://www.singlestore.com/cloud-trial/), [Docs](https://www.docs.singlestore.com/) and [Marketing](https://singlestore.com) websites.
+
+[Inspired by a tweet I saw](https://twitter.com/ianvieira_/status/1697960844376584700), I decided to share what I've learned about building reusable UI components in React.
+
+## 1. Give consumers control over the rendering logic
+
+Put simply: export each HTML element that your component renders as a separate React component.
+
+```
+// Bad
+<Tags items={[{ label: "React" }, { label: "UI" }, { label: "CSS" }, { label: "Design Systems" },]}>
+
+// Good
+<TagGroup>
+  <Tag>
+		React
+	</Tag>
+	<Tag>
+		UI
+	</Tag>
+	<Tag>
+		CSS
+	</Tag>
+	<Tag>
+		Design Systems
+	</Tag>
+</TagGroup>
+```
+
+At the very least, allow consumers to replace any HTML element via a prop.
